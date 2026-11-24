@@ -1,5 +1,8 @@
 name = "kgcfip"
 compatibility_date = "2026-03-09"
+# 部署时保留 Dashboard 里设置的变量（LOGINPW / JWT_SECRET / APITOKEN），
+# 否则 wrangler deploy 会用 toml 的配置覆盖远端，把这三个变量清空
+keep_vars = true
 
 # Worker 入口：functions/ 目录编译产物（npm run build 时自动生成）
 main = ".worker/index.js"
@@ -12,11 +15,10 @@ binding = "ASSETS"
 # （默认行为：先匹配静态资源，未匹配的路径如 /api/* 自动进 Worker 脚本）
 not_found_handling = "single-page-application"
 
-# KV 绑定：id 换成真实 KV namespace ID
-# （Dashboard → Storage & Databases → KV → 复制 ID）
+# KV 绑定：id 为真实 KV namespace ID（来自 Cloudflare Dashboard）
 [[kv_namespaces]]
 binding = "IP_KV"
-id = "你自己的KV ID"
+id = "0e42cd4844f241f1ac9e505c1acb5d11"
 preview_id = "local_kv_preview_id"
 
 # 注意：这里故意不写 [vars]！
