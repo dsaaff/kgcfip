@@ -6,9 +6,11 @@
   "scripts": {
     "dev:vite": "vite",
     "dev": "wrangler pages dev --kv=IP_KV --proxy 5173 -- npm run dev:vite",
-    "build": "tsc && vite build",
+    "build": "tsc && vite build && npm run worker:build",
     "deploy": "npm run build && wrangler pages deploy dist",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "worker:build": "wrangler pages functions build --outdir .worker",
+    "worker:deploy": "npm run build && npm run worker:build && wrangler deploy"
   },
   "dependencies": {
     "lucide-react": "^0.577.0",
@@ -17,7 +19,7 @@
     "react-icons": "^5.5.0"
   },
   "devDependencies": {
-    "@cloudflare/workers-types": "^4.20231218.0",
+    "@cloudflare/workers-types": "^5.20261124.1",
     "@types/react": "^18.2.43",
     "@types/react-dom": "^18.2.17",
     "@vitejs/plugin-react": "^4.2.1",
@@ -26,6 +28,6 @@
     "tailwindcss": "^3.4.0",
     "typescript": "^5.2.2",
     "vite": "^5.0.8",
-    "wrangler": "^3.22.0"
+    "wrangler": "^4.167.0"
   }
 }

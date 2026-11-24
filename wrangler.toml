@@ -1,16 +1,25 @@
 name = "kgcfip"
 compatibility_date = "2026-03-09"
 
-# 本地开发 KV 绑定配置
-# 运行 npx wrangler pages dev 时会使用此配置创建本地模拟 KV
-# 这里的 id 和 preview_id 在本地开发时可以是任意字符串
+# Worker 入口：functions/ 目录编译产物（npm run build 时自动生成）
+main = ".worker/index.js"
+
+# 静态资源：vite 构建产物
+[assets]
+directory = "./dist"
+binding = "ASSETS"
+# SPA 路由：刷新非根路径时返回 index.html
+# （默认行为：先匹配静态资源，未匹配的路径如 /api/* 自动进 Worker 脚本）
+not_found_handling = "single-page-application"
+
+# KV 绑定：id 换成真实 KV namespace ID
+# （Dashboard → Storage & Databases → KV → 复制 ID）
 [[kv_namespaces]]
 binding = "IP_KV"
 id = "你自己的KV ID"
 preview_id = "local_kv_preview_id"
 
-[vars]
-# 登录密码和APItoken，生产环境请在 Cloudflare Dashboard 设置
-LOGINPW = "LOGINPW"
-APITOKEN = "APITOKEN"
-JWT_SECRET = "JWT_SECRET"
+# 注意：这里故意不写 [vars]！
+# LOGINPW / JWT_SECRET / APITOKEN 在 Dashboard 配置：
+# Workers 项目 → Settings → Variables and Secrets
+# 写占位符在这里会覆盖 Dashboard 的真实密码，导致登录失败
